@@ -1,18 +1,24 @@
-var PouchDB = require('pouchdb');
-var pouchSeed = require('../index');
-var db = new PouchDB('http://localhost:5984/pouch_simple_test');
+const PouchDB = require('pouchdb');
+const pouchSeed = require('../index');
+const db = new PouchDB('http://localhost:5984/pouch_simple_test');
 
-var designDoc = {
+const designDoc = {
   person: {
     views: {
-      byFirstName: function (doc) {
-        emit(doc.firstName);
+      byFirstName: {
+        map: function (doc) {
+          emit(doc.firstName);
+        }
       },
-      byLastName: function (doc) {
-        emit(doc.lastName);
+      byLastName: {
+        map: function (doc) {
+          emit(doc.lastName);
+        }
       },
-      byFullName: function (doc) {
-        emit(doc.firstName + ' ' + doc.lastName);
+      byFullName: {
+        map: function (doc) {
+          emit(doc.firstName + ' ' + doc.lastName);
+        }
       }
     },
     updates: {
@@ -25,9 +31,9 @@ var designDoc = {
 };
 
 pouchSeed(db, designDoc)
-  .then(function(result) {
+  .then(function (result) {
     console.log(result);
   })
-  .catch(function(err) {
+  .catch(function (err) {
     console.log(err)
   });
